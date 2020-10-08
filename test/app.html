@@ -1,0 +1,169 @@
+<!-- <!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>googlemapAPI</title>
+    <meta name="viewport" content="initial-scale=1.0">
+  </head>
+  <body>
+    <div>
+      <div id="map_area" style="width:100%; height: 90%;"></div>
+    </div> -->
+<!DOCTYPE html>
+  <html>
+    <head>
+      <title>Simple Map</title>
+      <meta name="viewport" content="initial-scale=1.0">
+      <meta charset="utf-8">
+      <style>
+        #map 
+        {
+          width:100%;
+          height: 100%;
+        }
+        html, body {
+          height: 100%;
+          margin: 0;
+          padding: 0;
+        }
+      </style>
+    </head>
+    <body>
+      <p style = "font-size: 30px; color:purple; font-weight: bold;">近くの服屋さんを探す</p>
+      <p><button id = "getlocation">現在位置を取得する</button></p>
+      <div id="map" style="height: 500px; width: 100%; margin: 2rem auto 0;"></div>
+  
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+      <script src="https://maps.googleapis.com/maps/api/js?key="
+      ></script>
+
+      <script type="text/javascript">
+          var map;
+          var service;
+          var infowindow;
+          var initPos = new google.maps.LatLng(35.658243, 139.701710); //初期値は渋谷駅
+
+
+          // 現在地取得
+          // document.getElementById("getlocation").onclick = function() {
+          //   geoLocationInit();
+          //   alert(p);
+          // }
+
+          // function geoLocationInit(){
+          //   navigator.geolocation.getCurrentPosition( successFunc , errorFunc , optionObj ) ;
+          // }
+
+            
+          // function success(position) {
+          //     var crd = position.coords;
+          //     alert(crd);
+
+          //     function success(position) {
+          //       var currentLat = position.coords.latitude;
+          //       var currentLng = position.coords.longitude;
+          //       var initPos = new google.maps.LatLng(currentLat,currentLng);
+          //       createMap(initPos);
+          //       CurrentPositionMarker(initPos);
+          //     }
+          //   }
+
+          map = new google.maps.Map(document.getElementById("map"), {
+                    center: initPos,
+                    zoom: 17
+                  });
+                  var request = {
+                    location: initPos,
+                    radius: 500,     // 表示する半径領域を設定
+                    types: ['clothing_store']    // 服屋を指定
+                  };
+                  service = new google.maps.places.PlacesService(map);
+                  service.nearbySearch(request, callback);
+                  
+        function setmaker(latlng,icn,place){
+          var marker = new google.maps.Marker({
+                      position : latlng,
+                      map : map       
+          });
+          var placename = place.name;
+          var contentString = `<div class="sample"><p id="place_name">${placename}</p></div>`;
+
+          var infoWindow = new google.maps.InfoWindow({
+                content : contentString
+              });
+
+              marker.addListener('click', function() { 
+                infoWindow.open(map, marker); 
+              });
+
+              }
+
+        function callback(results, status){
+          if (status == google.maps.places.PlacesServiceStatus.OK) {
+                  for (var i = 0; i < results.length; i++) {
+                    var place = results[i];
+                    latlng = place.geometry.location;
+                    icn = place.icon;
+                    setmaker(latlng, icn,place);
+                  }
+          }
+        }
+
+  </script>
+  </body>
+  </html>
+
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  //   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  //   <script src="../test/js/BmapQuery.js"></script>
+  //   <script type="text/javascript" src="http://maps.google.com/maps/api/js?key=AIzaSyBxaVzf4H0HNpknxOi-_9-J0tsO8LfA94Q&libraries=places" charset="utf-8"></script>
+
+  //   <script type="text/javascript">
+  //     var map;
+  //     var service;
+  //     var infowindow;
+  //     initialize();
+  //     searchcloth();
+
+  //     function initialize(){
+  //       // 初期値は渋谷駅に設定
+  //       var initPos = new google.maps.LatLng(35.658243, 139.701710);
+  //       myMap =  new google.maps.Map(document.getElementById("map_area") ,{
+  //         center : initPos,
+  //         zoom : 20
+  //       });
+  //     }
+      
+  //     function searchcloth(){
+  //       myMap = new google.maps.Map(document.getElementById("map_area"));
+  //       service.nearbySearch(request, callback);
+  //       var request = {
+  //           location: initPos,
+  //           radius: 500,     // 表示する半径領域を設定
+  //           types: ['clothing_store']    // 服屋を指定
+  //         };
+  //       var service = new google.maps.places.PlacesService(myMap);
+  //       service.search(request, Result_Places);
+  //     }
+
+  //     function Marker(latlng, point){
+  //             var marker = new google.maps.Marker({
+  //               position: latlng,
+  //               map: map,       
+  //             });
+  //     }
+
+  //     function callback(results, status) {
+  //       if (status == google.maps.places.PlacesServiceStatus.OK) {
+  //       for (var i = 0; i < results.length; i++) {
+  //         var place = results[i];
+  //         latlng = place.geometry.location;
+  //         point = place.icon;
+  //         Marker(latlng, point);
+  //         }
+  //       }
+  //     }
+        
+    </script>
+  </body>
+</html>
